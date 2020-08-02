@@ -5,8 +5,10 @@
   <img src="https://i.imgur.com/5ByIYST.png" width="200" />
 </p>
 
-Hi! don't forget to smashhh star button ^_^
+Hi! If you like it, don't forget to smashhh star button ^_^
 
-This UI design by 
-<b>Yasintha Perera</b>
-https://www.youtube.com/watch?v=oGsX4M3wADI
+Sory for shitty code btw
+
+This UI created by 
+<a href="https://www.youtube.com/watch?v=oGsX4M3wADI">Yasintha Perera</a>
+
