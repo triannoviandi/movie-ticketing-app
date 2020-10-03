@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:movieticketingapp/app_util.dart';
-import 'package:movieticketingapp/videoclipper.dart';
-import 'package:movieticketingapp/videoclipper2.dart';
+import 'package:movieticketingapp/widget/app_widget.dart';
+import 'package:movieticketingapp/widget/videoclipper.dart';
+import 'package:movieticketingapp/widget/videoclipper2.dart';
 import 'package:video_player/video_player.dart';
 
 class BookingScreen extends StatefulWidget {
-  VideoPlayerController moviePlayerController;
-  VideoPlayerController reflectionPlayerController;
-  String movieName;
+  final VideoPlayerController moviePlayerController;
+  final VideoPlayerController reflectionPlayerController;
+  final String movieName;
 
   BookingScreen(
       {this.moviePlayerController,
@@ -20,31 +20,31 @@ class BookingScreen extends StatefulWidget {
 
 class _BookingScreenState extends State<BookingScreen>
     with TickerProviderStateMixin {
-  Size get size => MediaQuery.of(context).size;
-  List<AnimationController> dateSelectorACList = List();
-  List<Animation<double>> dateSelectorTweenList = List();
+  Size get _size => MediaQuery.of(context).size;
+  List<AnimationController> _dateSelectorACList = List();
+  List<Animation<double>> _dateSelectorTweenList = List();
 
-  List<AnimationController> timeSelectorACList = List();
-  List<Animation<double>> timeSelectorTweenList = List();
+  List<AnimationController> _timeSelectorACList = List();
+  List<Animation<double>> _timeSelectorTweenList = List();
 
-  AnimationController dateBackgroundAc;
-  Animation<double> dateBackgroundTween;
+  AnimationController _dateBackgroundAc;
+  Animation<double> _dateBackgroundTween;
 
-  AnimationController cinemaScreenAc;
-  Animation<double> cinemaScreenTween;
+  AnimationController _cinemaScreenAc;
+  Animation<double> _cinemaScreenTween;
 
-  AnimationController reflectionAc;
-  Animation<double> reflectionTween;
+  AnimationController _reflectionAc;
+  Animation<double> _reflectionTween;
 
-  AnimationController payButtonAc;
-  Animation<double> payButtonTween;
+  AnimationController _payButtonAc;
+  Animation<double> _payButtonTween;
 
-  AnimationController cinemaChairAc;
-  Animation<double> cinemaChairTween;
+  AnimationController _cinemaChairAc;
+  Animation<double> _cinemaChairTween;
 
-  int dateIndexSelected = 1;
-  int timeIndexSelected = 1;
-  var chairStatus = [
+  int _dateIndexSelected = 1;
+  int _timeIndexSelected = 1;
+  var _chairStatus = [
     [0, 3, 2, 1, 2, 2, 0],
     [2, 2, 2, 2, 1, 2, 2],
     [1, 1, 2, 2, 2, 2, 2],
@@ -55,7 +55,6 @@ class _BookingScreenState extends State<BookingScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     widget.moviePlayerController.setLooping(true);
     widget.reflectionPlayerController.setLooping(true);
@@ -68,76 +67,76 @@ class _BookingScreenState extends State<BookingScreen>
   void initializeAnimation() {
     // initialize dateSelector List
     for (int i = 0; i < 7; i++) {
-      dateSelectorACList.add(AnimationController(
+      _dateSelectorACList.add(AnimationController(
           vsync: this, duration: Duration(milliseconds: 500)));
-      dateSelectorTweenList.add(Tween<double>(begin: 1000, end: 0)
+      _dateSelectorTweenList.add(Tween<double>(begin: 1000, end: 0)
           .chain(CurveTween(curve: Curves.easeOutCubic))
-          .animate(dateSelectorACList[i]));
+          .animate(_dateSelectorACList[i]));
       Future.delayed(Duration(milliseconds: i * 50 + 170), () {
-        dateSelectorACList[i].forward();
+        _dateSelectorACList[i].forward();
       });
     }
 
     // initialize dateSelector Background
-    dateBackgroundAc =
+    _dateBackgroundAc =
         AnimationController(vsync: this, duration: Duration(milliseconds: 700));
-    dateBackgroundTween = Tween<double>(begin: 1000, end: 0)
+    _dateBackgroundTween = Tween<double>(begin: 1000, end: 0)
         .chain(CurveTween(curve: Curves.easeOutCubic))
-        .animate(dateBackgroundAc);
+        .animate(_dateBackgroundAc);
     Future.delayed(Duration(milliseconds: 150), () {
-      dateBackgroundAc.forward();
+      _dateBackgroundAc.forward();
     });
 
     // initialize timeSelector List
     for (int i = 0; i < 3; i++) {
-      timeSelectorACList.add(AnimationController(
+      _timeSelectorACList.add(AnimationController(
           vsync: this, duration: Duration(milliseconds: 500)));
-      timeSelectorTweenList.add(Tween<double>(begin: 1000, end: 0)
+      _timeSelectorTweenList.add(Tween<double>(begin: 1000, end: 0)
           .chain(CurveTween(curve: Curves.easeOutCubic))
-          .animate(dateSelectorACList[i]));
+          .animate(_timeSelectorACList[i]));
       Future.delayed(Duration(milliseconds: i * 25 + 100), () {
-        timeSelectorACList[i].forward();
+        _timeSelectorACList[i].forward();
       });
     }
 
     // initialize cinemaScreen
-    cinemaScreenAc = AnimationController(
+    _cinemaScreenAc = AnimationController(
         vsync: this, duration: Duration(milliseconds: 2000));
-    cinemaScreenTween = Tween<double>(begin: 0, end: 1)
+    _cinemaScreenTween = Tween<double>(begin: 0, end: 1)
         .chain(CurveTween(curve: Curves.easeInOutQuart))
-        .animate(cinemaScreenAc);
+        .animate(_cinemaScreenAc);
     Future.delayed(Duration(milliseconds: 800), () {
-      cinemaScreenAc.forward();
+      _cinemaScreenAc.forward();
     });
 
     // initialize reflection
-    reflectionAc =
+    _reflectionAc =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    reflectionTween = Tween<double>(begin: 0, end: 1)
+    _reflectionTween = Tween<double>(begin: 0, end: 1)
         .chain(CurveTween(curve: Curves.easeInOutQuart))
-        .animate(reflectionAc);
+        .animate(_reflectionAc);
     Future.delayed(Duration(milliseconds: 1800), () {
-      reflectionAc.forward();
+      _reflectionAc.forward();
     });
 
     // paybutton
-    payButtonAc = AnimationController(
+    _payButtonAc = AnimationController(
         vsync: this, duration: Duration(milliseconds: 2000));
-    payButtonTween = Tween<double>(begin: -1, end: 0)
+    _payButtonTween = Tween<double>(begin: -1, end: 0)
         .chain(CurveTween(curve: Curves.easeInOutQuart))
-        .animate(payButtonAc);
+        .animate(_payButtonAc);
     Future.delayed(Duration(milliseconds: 800), () {
-      payButtonAc.forward();
+      _payButtonAc.forward();
     });
 
     // chair
-    cinemaChairAc = AnimationController(
+    _cinemaChairAc = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1600));
-    cinemaChairTween = Tween<double>(begin: -1, end: 0)
+    _cinemaChairTween = Tween<double>(begin: -1, end: 0)
         .chain(CurveTween(curve: Curves.ease))
-        .animate(cinemaChairAc);
+        .animate(_cinemaChairAc);
     Future.delayed(Duration(milliseconds: 1200), () {
-      cinemaChairAc.forward();
+      _cinemaChairAc.forward();
     });
   }
 
@@ -149,25 +148,25 @@ class _BookingScreenState extends State<BookingScreen>
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Column(
           children: <Widget>[
-            appbar(),
-            dateSelector(),
-            timeSelector(),
-            cinemaRoom(),
-            payButton()
+            _appBar(),
+            _dateSelector(),
+            _timeSelector(),
+            _cinemaRoom(),
+            _payButton()
           ],
         ),
       ),
     );
   }
 
-  Widget cinemaRoom() {
+  Widget _cinemaRoom() {
     return Expanded(
         flex: 47,
         child: Stack(
           alignment: Alignment.topCenter,
           children: <Widget>[
             Container(
-              width: size.width,
+              width: _size.width,
             ),
             Container(
               padding: EdgeInsets.only(top: 18),
@@ -177,10 +176,10 @@ class _BookingScreenState extends State<BookingScreen>
                 child: Center(
                   child: widget.reflectionPlayerController.value.initialized
                       ? AnimatedBuilder(
-                          animation: reflectionAc,
+                          animation: _reflectionAc,
                           builder: (ctx, child) {
                             return Opacity(
-                              opacity: reflectionTween.value,
+                              opacity: _reflectionTween.value,
                               child: child,
                             );
                           },
@@ -199,10 +198,10 @@ class _BookingScreenState extends State<BookingScreen>
               child: ClipPath(
                 clipper: VideoClipper2(),
                 child: AnimatedBuilder(
-                  animation: reflectionAc,
+                  animation: _reflectionAc,
                   builder: (ctx, child) {
                     return Opacity(
-                      opacity: reflectionTween.value,
+                      opacity: _reflectionTween.value,
                       child: child,
                     );
                   },
@@ -210,27 +209,29 @@ class _BookingScreenState extends State<BookingScreen>
                     height: 40,
                     width: MediaQuery.of(context).size.width * .8,
                     decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [Colors.grey[300], Colors.transparent],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            stops: [0, 1])),
+                      gradient: LinearGradient(
+                        colors: [Colors.grey[300], Colors.transparent],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0, 1],
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
             Positioned(
-                bottom: size.height * .02,
+                bottom: _size.height * .02,
                 child: AnimatedBuilder(
-                    animation: cinemaChairAc,
+                    animation: _cinemaChairTween,
                     builder: (ctx, child) {
                       return Transform.translate(
-                        offset: Offset(0, cinemaChairTween.value * 100),
+                        offset: Offset(0, _cinemaChairTween.value * 100),
                         child: Opacity(
-                            opacity: cinemaChairTween.value + 1, child: child),
+                            opacity: _cinemaChairTween.value + 1, child: child),
                       );
                     },
-                    child: Container(width: size.width, child: chairList()))),
+                    child: Container(width: _size.width, child: _chairList()))),
             Positioned(
               top: 0,
               child: Container(
@@ -240,10 +241,10 @@ class _BookingScreenState extends State<BookingScreen>
                     Center(
                       child: widget.moviePlayerController.value.initialized
                           ? AnimatedBuilder(
-                              animation: cinemaScreenAc,
+                              animation: _cinemaScreenAc,
                               builder: (ctx, child) {
                                 double perspective =
-                                    0.004 * cinemaScreenTween.value;
+                                    0.004 * _cinemaScreenTween.value;
                                 // return ClipPath(
                                 //     clipper: VideoClipper(
                                 //         curveValue: monitorTween.value),
@@ -254,11 +255,11 @@ class _BookingScreenState extends State<BookingScreen>
                                       alignment: Alignment.topCenter,
                                       transform: Matrix4.identity()
                                         ..setEntry(3, 2, perspective)
-                                        ..rotateX(cinemaScreenTween.value),
+                                        ..rotateX(_cinemaScreenTween.value),
                                       child: ClipPath(
                                           clipper: VideoClipper(
                                               curveValue:
-                                                  cinemaScreenTween.value),
+                                                  _cinemaScreenTween.value),
                                           child: child)),
                                 );
                               },
@@ -274,21 +275,21 @@ class _BookingScreenState extends State<BookingScreen>
         ));
   }
 
-  Widget payButton() {
+  Widget _payButton() {
     return Expanded(
       flex: 13,
       child: AnimatedBuilder(
-        animation: payButtonAc,
+        animation: _payButtonAc,
         builder: (ctx, child) {
           double opacity() {
-            if (payButtonTween.value + 1 < 0.2) {
-              return (payButtonTween.value + 1) * 5;
+            if (_payButtonTween.value + 1 < 0.2) {
+              return (_payButtonTween.value + 1) * 5;
             }
             return 1;
           }
 
           return Transform.translate(
-            offset: Offset(0, payButtonTween.value * 200),
+            offset: Offset(0, _payButtonTween.value * 200),
             child: Opacity(opacity: opacity(), child: child),
           );
         },
@@ -300,33 +301,34 @@ class _BookingScreenState extends State<BookingScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  chairCategory(Colors.white, "FREE"),
-                  chairCategory(AppColor.primary, "YOURS"),
-                  chairCategory(Colors.grey[700], "RESERVED"),
-                  chairCategory(Colors.red[800], "NOT AVAILABLE"),
+                  _chairCategory(Colors.white, "FREE"),
+                  _chairCategory(AppColor.primary, "YOURS"),
+                  _chairCategory(Colors.grey[700], "RESERVED"),
+                  _chairCategory(Colors.red[800], "NOT AVAILABLE"),
                 ],
               ),
             ),
             Container(
               margin: EdgeInsets.only(left: 32, right: 32, bottom: 8),
               child: FlatButton(
-                  color: AppColor.primary,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  onPressed: () {},
-                  child: Container(
-                    width: size.width - 64,
-                    height: size.height * .08,
-                    child: Center(
-                      child: Text(
-                        'Pay',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                      ),
+                color: AppColor.primary,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                onPressed: () {},
+                child: Container(
+                  width: _size.width - 64,
+                  height: _size.height * .08,
+                  child: Center(
+                    child: Text(
+                      'Pay',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
                     ),
-                  )),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -334,7 +336,7 @@ class _BookingScreenState extends State<BookingScreen>
     );
   }
 
-  Widget chairCategory(Color color, String category) {
+  Widget _chairCategory(Color color, String category) {
     return Row(
       children: <Widget>[
         Container(
@@ -353,7 +355,7 @@ class _BookingScreenState extends State<BookingScreen>
     );
   }
 
-  Widget chairList() {
+  Widget _chairList() {
     // 0 is null
     // 1 is free
     // 2 is reserved
@@ -365,54 +367,55 @@ class _BookingScreenState extends State<BookingScreen>
         children: <Widget>[
           for (int i = 0; i < 6; i++)
             Container(
-              margin: EdgeInsets.only(top: i == 3 ? size.height * .02 : 0),
+              margin: EdgeInsets.only(top: i == 3 ? _size.height * .02 : 0),
               child: Row(
                 children: <Widget>[
                   for (int x = 0; x < 9; x++)
                     Expanded(
-                        flex: x == 0 || x == 8 ? 2 : 1,
-                        child: x == 0 ||
-                                x == 8 ||
-                                (i == 0 && x == 1) ||
-                                (i == 0 && x == 7) ||
-                                (i == 3 && x == 1) ||
-                                (i == 3 && x == 7) ||
-                                (i == 5 && x == 1) ||
-                                (i == 5 && x == 7)
-                            ? Container()
-                            : GestureDetector(
-                                onTap: () {
-                                  if (chairStatus[i][x - 1] == 1) {
-                                    setState(() {
-                                      chairStatus[i][x - 1] = 4;
-                                    });
-                                  } else if (chairStatus[i][x - 1] == 4) {
-                                    setState(() {
-                                      chairStatus[i][x - 1] = 1;
-                                    });
-                                  }
-                                },
-                                child: Container(
-                                  height: size.width / 11 - 10,
-                                  margin: EdgeInsets.all(5),
-                                  child: chairStatus[i][x - 1] == 1
-                                      ? AppIcon.whiteChair()
-                                      : chairStatus[i][x - 1] == 2
-                                          ? AppIcon.greyChair()
-                                          : chairStatus[i][x - 1] == 3
-                                              ? AppIcon.redChair()
-                                              : AppIcon.yellowChair(),
-                                ),
-                              )),
+                      flex: x == 0 || x == 8 ? 2 : 1,
+                      child: x == 0 ||
+                              x == 8 ||
+                              (i == 0 && x == 1) ||
+                              (i == 0 && x == 7) ||
+                              (i == 3 && x == 1) ||
+                              (i == 3 && x == 7) ||
+                              (i == 5 && x == 1) ||
+                              (i == 5 && x == 7)
+                          ? Container()
+                          : GestureDetector(
+                              onTap: () {
+                                if (_chairStatus[i][x - 1] == 1) {
+                                  setState(() {
+                                    _chairStatus[i][x - 1] = 4;
+                                  });
+                                } else if (_chairStatus[i][x - 1] == 4) {
+                                  setState(() {
+                                    _chairStatus[i][x - 1] = 1;
+                                  });
+                                }
+                              },
+                              child: Container(
+                                height: _size.width / 11 - 10,
+                                margin: EdgeInsets.all(5),
+                                child: _chairStatus[i][x - 1] == 1
+                                    ? AppWidget.whiteChair()
+                                    : _chairStatus[i][x - 1] == 2
+                                        ? AppWidget.greyChair()
+                                        : _chairStatus[i][x - 1] == 3
+                                            ? AppWidget.redChair()
+                                            : AppWidget.yellowChair(),
+                              ),
+                            ),
+                    ),
                 ],
               ),
-            )
+            ),
         ],
       ),
     );
   }
 
-  Widget timeSelector() {
+  Widget _timeSelector() {
     var time = [
       ["01.30", 45],
       ["06.30", 45],
@@ -422,30 +425,31 @@ class _BookingScreenState extends State<BookingScreen>
     return Expanded(
       flex: 17,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: size.height * .035),
+        margin: EdgeInsets.symmetric(vertical: _size.height * .035),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: 3,
           itemBuilder: (ctx, index) {
             return AnimatedBuilder(
-              animation: timeSelectorACList[index],
+              animation: _timeSelectorACList[index],
               builder: (ctx, child) {
                 return Transform.translate(
-                  offset: Offset(timeSelectorTweenList[index].value, 0),
+                  offset: Offset(_timeSelectorTweenList[index].value, 0),
                   child: child,
                 );
               },
               child: Container(
-                  margin: EdgeInsets.only(left: index == 0 ? 32 : 0),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        timeIndexSelected = index;
-                      });
-                    },
-                    child: timeItem(time[index][0], time[index][1],
-                        index == timeIndexSelected ? true : false),
-                  )),
+                margin: EdgeInsets.only(left: index == 0 ? 32 : 0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _timeIndexSelected = index;
+                    });
+                  },
+                  child: _timeItem(time[index][0], time[index][1],
+                      index == _timeIndexSelected ? true : false),
+                ),
+              ),
             );
           },
         ),
@@ -453,7 +457,7 @@ class _BookingScreenState extends State<BookingScreen>
     );
   }
 
-  Widget timeItem(String time, int price, bool active) {
+  Widget _timeItem(String time, int price, bool active) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12),
       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -495,35 +499,37 @@ class _BookingScreenState extends State<BookingScreen>
     );
   }
 
-  Widget dateSelector() {
+  Widget _dateSelector() {
     DateTime currentDate = DateTime.now();
 
     return Expanded(
       flex: 13,
       child: Container(
-        width: size.width,
+        width: _size.width,
         padding: EdgeInsets.only(left: 32),
         child: Stack(
           alignment: Alignment.centerLeft,
           children: <Widget>[
             AnimatedBuilder(
-              animation: dateBackgroundAc,
+              animation: _dateBackgroundAc,
               builder: (ctx, child) {
                 return Transform.translate(
-                  offset: Offset(dateBackgroundTween.value, 0),
+                  offset: Offset(_dateBackgroundTween.value, 0),
                   child: child,
                 );
               },
               child: Container(
                 decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.1),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        bottomLeft: Radius.circular(12))),
+                  color: Colors.white.withOpacity(.1),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    bottomLeft: Radius.circular(12),
+                  ),
+                ),
               ),
             ),
             Container(
-              width: size.width,
+              width: _size.width,
               child: ListView.builder(
                 itemCount: 7,
                 scrollDirection: Axis.horizontal,
@@ -531,26 +537,26 @@ class _BookingScreenState extends State<BookingScreen>
                   var date = currentDate.add(Duration(days: index));
 
                   return AnimatedBuilder(
-                    animation: dateSelectorACList[index],
+                    animation: _dateSelectorACList[index],
                     builder: (ctx, child) {
                       return Transform.translate(
-                        offset: Offset(dateSelectorTweenList[index].value, 0),
+                        offset: Offset(_dateSelectorTweenList[index].value, 0),
                         child: child,
                       );
                     },
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          dateIndexSelected = index;
+                          _dateIndexSelected = index;
                         });
                       },
                       child: Container(
                         padding: EdgeInsets.all(4),
                         margin: EdgeInsets.symmetric(
-                            vertical: size.height * .025, horizontal: 12),
+                            vertical: _size.height * .025, horizontal: 12),
                         width: 44,
                         decoration: BoxDecoration(
-                            color: dateIndexSelected == index
+                            color: _dateIndexSelected == index
                                 ? AppColor.primary
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(5)),
@@ -558,11 +564,11 @@ class _BookingScreenState extends State<BookingScreen>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              dayFormat(date.weekday),
+                              _dayFormat(date.weekday),
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: index == dateIndexSelected
+                                color: index == _dateIndexSelected
                                     ? Colors.black
                                     : Colors.white,
                               ),
@@ -570,12 +576,13 @@ class _BookingScreenState extends State<BookingScreen>
                             Text(
                               date.day.toString(),
                               style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w600,
-                                  height: 1,
-                                  color: index == dateIndexSelected
-                                      ? Colors.black
-                                      : Colors.white),
+                                fontSize: 22,
+                                fontWeight: FontWeight.w600,
+                                height: 1,
+                                color: index == _dateIndexSelected
+                                    ? Colors.black
+                                    : Colors.white,
+                              ),
                             )
                           ],
                         ),
@@ -591,7 +598,7 @@ class _BookingScreenState extends State<BookingScreen>
     );
   }
 
-  String dayFormat(int dayWeek) {
+  String _dayFormat(int dayWeek) {
     switch (dayWeek) {
       case 1:
         return "MO";
@@ -620,11 +627,11 @@ class _BookingScreenState extends State<BookingScreen>
     }
   }
 
-  Widget appbar() {
+  Widget _appBar() {
     return Expanded(
       flex: 8,
       child: Container(
-        width: size.width,
+        width: _size.width,
         padding: EdgeInsets.symmetric(vertical: 0),
         child: Stack(
           alignment: Alignment.center,
@@ -637,18 +644,21 @@ class _BookingScreenState extends State<BookingScreen>
                   fontWeight: FontWeight.bold),
             ),
             Positioned(
-                left: 24,
-                child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                          size: 18,
-                        )))),
+              left: 24,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

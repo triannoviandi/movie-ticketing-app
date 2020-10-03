@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movieticketingapp/app_util.dart';
-import 'package:movieticketingapp/booking_screen.dart';
-import 'package:movieticketingapp/movie_data.dart';
+import 'package:movieticketingapp/data/movie_data.dart';
+import 'package:movieticketingapp/ui/booking_screen.dart';
+import 'package:movieticketingapp/widget/app_widget.dart';
 import 'package:rubber/rubber.dart';
 import 'package:video_player/video_player.dart';
 
@@ -17,17 +17,18 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen>
     with TickerProviderStateMixin {
-  Size get size => MediaQuery.of(context).size;
-  RubberAnimationController rubberSheetAnimationController;
-  ScrollController rubberSheetScrollController;
+  Size get _size => MediaQuery.of(context).size;
+  RubberAnimationController _rubberSheetAnimationController;
+  ScrollController _rubberSheetScrollController;
 
-  VideoPlayerController moviePlayerController;
-  VideoPlayerController reflectionPlayerController;
+  VideoPlayerController _moviePlayerController;
+  VideoPlayerController _reflectionPlayerController;
 
   @override
   void initState() {
-    rubberSheetScrollController = ScrollController();
-    rubberSheetAnimationController = RubberAnimationController(
+    super.initState();
+    _rubberSheetScrollController = ScrollController();
+    _rubberSheetAnimationController = RubberAnimationController(
       vsync: this,
       lowerBoundValue:
           AnimationControllerValue(pixel: widget.size.height * .75),
@@ -38,13 +39,11 @@ class _DetailScreenState extends State<DetailScreen>
           mass: 1, stiffness: Stiffness.LOW, ratio: DampingRatio.LOW_BOUNCY),
     );
 
-    moviePlayerController =
+    _moviePlayerController =
         VideoPlayerController.asset(widget.movie.videoClipPath)..initialize();
-    reflectionPlayerController =
+    _reflectionPlayerController =
         VideoPlayerController.asset(widget.movie.videoClipReflectionPath)
           ..initialize();
-    // TODO: implement initState
-    super.initState();
   }
 
   @override
@@ -54,64 +53,67 @@ class _DetailScreenState extends State<DetailScreen>
       body: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          background(widget.movie.image),
-          rubberSheet(),
-          buyButton(context),
-          backButton(context),
+          _background(widget.movie.image),
+          _rubberSheet(),
+          _buyButton(context),
+          _backButton(context),
         ],
       ),
     );
   }
 
-  Positioned backButton(BuildContext context) {
+  Positioned _backButton(BuildContext context) {
     return Positioned(
-        left: 16,
-        top: MediaQuery.of(context).padding.top + 16,
-        child: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.arrow_back_ios, color: Colors.white),
-          ),
-        ));
-  }
-
-  Widget buyButton(BuildContext context) {
-    return Positioned(
-      bottom: 0,
-      child: Container(
-        width: size.width * .9,
-        height: size.height * .08,
-        margin: EdgeInsets.symmetric(vertical: size.width * .05),
-        child: FlatButton(
-            color: Colors.black,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                      pageBuilder: (ctx, a1, a2) => BookingScreen(
-                          movieName: widget.movie.name,
-                          moviePlayerController: moviePlayerController,
-                          reflectionPlayerController:
-                              reflectionPlayerController)));
-            },
-            child: Text(
-              'Buy Ticket',
-              style: TextStyle(
-                  color: AppColor.primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18),
-            )),
+      left: 16,
+      top: MediaQuery.of(context).padding.top + 16,
+      child: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Icon(Icons.arrow_back_ios, color: Colors.white),
+        ),
       ),
     );
   }
 
-  Widget rubberSheet() {
+  Widget _buyButton(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      child: Container(
+        width: _size.width * .9,
+        height: _size.height * .08,
+        margin: EdgeInsets.symmetric(vertical: _size.width * .05),
+        child: FlatButton(
+          color: Colors.black,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (ctx, a1, a2) => BookingScreen(
+                    movieName: widget.movie.name,
+                    moviePlayerController: _moviePlayerController,
+                    reflectionPlayerController: _reflectionPlayerController),
+              ),
+            );
+          },
+          child: Text(
+            'Buy Ticket',
+            style: TextStyle(
+                color: AppColor.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 18),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _rubberSheet() {
     return TweenAnimationBuilder(
       duration: Duration(milliseconds: 250),
-      tween: Tween<double>(begin: size.height / 2, end: 0),
+      tween: Tween<double>(begin: _size.height / 2, end: 0),
       builder: (_, value, child) {
         return Transform.translate(
           offset: Offset(0, value),
@@ -119,8 +121,8 @@ class _DetailScreenState extends State<DetailScreen>
         );
       },
       child: RubberBottomSheet(
-        scrollController: rubberSheetScrollController,
-        animationController: rubberSheetAnimationController,
+        scrollController: _rubberSheetScrollController,
+        animationController: _rubberSheetAnimationController,
         lowerLayer: Container(color: Colors.transparent),
         upperLayer: Container(
           // color: Colors.white,
@@ -130,7 +132,7 @@ class _DetailScreenState extends State<DetailScreen>
                   child: Center(
                 child: Image(
                   image: widget.movie.imageText.image,
-                  width: size.width / 2,
+                  width: _size.width / 2,
                 ),
               )),
               Expanded(
@@ -142,7 +144,7 @@ class _DetailScreenState extends State<DetailScreen>
                   child: ListView(
                     physics: NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.all(24),
-                    controller: rubberSheetScrollController,
+                    controller: _rubberSheetScrollController,
                     children: <Widget>[
                       Text(
                         widget.movie.name,
@@ -153,7 +155,7 @@ class _DetailScreenState extends State<DetailScreen>
                       SizedBox(
                         height: 8,
                       ),
-                      genresFormat(widget.movie.genre),
+                      AppWidget.genresFormat(widget.movie.genre, Colors.black),
                       SizedBox(
                         height: 8,
                       ),
@@ -165,7 +167,7 @@ class _DetailScreenState extends State<DetailScreen>
                       SizedBox(
                         height: 8,
                       ),
-                      starRating(widget.movie.rating),
+                      AppWidget.starRating(widget.movie.rating),
                       SizedBox(
                         height: 28,
                       ),
@@ -189,7 +191,7 @@ class _DetailScreenState extends State<DetailScreen>
                       SizedBox(
                         height: 28,
                       ),
-                      cast(),
+                      _cast(),
                       SizedBox(
                         height: 68,
                       )
@@ -204,9 +206,9 @@ class _DetailScreenState extends State<DetailScreen>
     );
   }
 
-  Widget cast() {
+  Widget _cast() {
     return Container(
-      width: size.width,
+      width: _size.width,
       height: 140,
       child: ListView.builder(
         padding: EdgeInsets.zero,
@@ -216,15 +218,16 @@ class _DetailScreenState extends State<DetailScreen>
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Container(
-              width: size.width / 6,
+              width: _size.width / 6,
               child: Column(
                 children: <Widget>[
                   ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image(
-                        image: widget.movie.castList[index].photo.image,
-                        width: size.width / 6,
-                      )),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image(
+                      image: widget.movie.castList[index].photo.image,
+                      width: _size.width / 6,
+                    ),
+                  ),
                   SizedBox(
                     height: 6,
                   ),
@@ -243,61 +246,7 @@ class _DetailScreenState extends State<DetailScreen>
     );
   }
 
-  Widget starRating(double rating) {
-    Widget star(bool fill) {
-      return Container(
-        child: Icon(
-          Icons.star,
-          size: 18,
-          color: fill ? AppColor.primary : Colors.grey[300],
-        ),
-      );
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(5, (index) {
-        if (index < (rating / 2).round()) {
-          return star(true);
-        } else
-          return star(false);
-      }),
-    );
-  }
-
-  Widget genresFormat(List<String> genres) {
-    Widget dot = Container(
-      width: 6,
-      height: 6,
-      margin: EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50), color: Colors.black),
-    );
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(genres.length, (index) {
-        if (index < genres.length - 1) {
-          return Row(
-            children: <Widget>[
-              Text(
-                genres[index],
-                style: TextStyle(fontSize: 14),
-              ),
-              dot
-            ],
-          );
-        } else {
-          return Text(
-            genres[index],
-            style: TextStyle(fontSize: 14),
-          );
-        }
-      }),
-    );
-  }
-
-  Widget background(Image background) {
+  Widget _background(Image background) {
     return Positioned(
       top: -48,
       bottom: 0,
@@ -313,8 +262,8 @@ class _DetailScreenState extends State<DetailScreen>
         child: Image(
           fit: BoxFit.cover,
           image: background.image,
-          width: size.width,
-          height: size.height,
+          width: _size.width,
+          height: _size.height,
         ),
       ),
     );

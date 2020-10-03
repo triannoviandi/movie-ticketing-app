@@ -31,7 +31,7 @@ dependencies:
   video_player: ^0.10.11+2
   scroll_snap_list: ^0.4.1
   rubber: ^0.4.0
-  flutter_svg: 0.17.4
+  flutter_svg: 0.19.0
 
 dev_dependencies:
   flutter_test:
